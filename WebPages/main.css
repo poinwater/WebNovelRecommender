@@ -1,0 +1,21 @@
+.main_table {
+	font-size: 14px;
+    width: 100%;
+    text-align: left;
+    border-radius: 4px 4px 0 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+}    
+ .main_table thead {
+    background: #F7F9FA;
+    border-radius: 8px 8px 0 0;
+}    
+ .main_table  tr > th, .main_table tr > td {
+    padding: 6px 2px;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+ .main_table tbody tr:hover{cursor: pointer;background: #eef2fd;}
+.tr_border{border-top: 1px #eee solid;}

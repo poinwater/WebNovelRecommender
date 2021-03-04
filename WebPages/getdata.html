@@ -1,0 +1,93 @@
+<!DOCTYPE>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="main.css" rel="stylesheet" type="text/css" />
+<script language=javascript src="jquery.1.11.0.min.js"></script>
+<script language=javascript src="template.js"></script>
+</head>
+<title>标题</title>
+<html>
+	<table border=0 style='width:100%;height:100%'>
+	<tr style="height:5%"><td colspan=2 align=center>
+		说明
+	</td>
+	<tr style="height:5%"><td style="width:50%;">
+			<div>请输入：</div>
+		</td>
+		<td valign=top>
+			<div>结果：</div>
+		</td>
+	</td></tr>
+	<tr style="height:80%"><td style="width:50%;">
+			<textarea id="textarea_input" style="height:100%;width:100%;resize:none"></textarea>
+		</td>
+		<td valign=top>
+			<table class="main_table" cellpadding="0" cellspacing="0" style="width:100%;overflow:auto;" id="table_data">
+				<thead>
+					<tr>
+						<th align="center" style="width: 10%;" nowrap>书名</th>
+						<th align="center" style="width: 10%;" nowrap>评分</th>
+					</tr>
+				</thead>
+				<tbody>
+			</table>
+	</td></tr>
+	<tr style="height:10%"><td colspan=2 align=center>
+		<input type=button id="button_start" value="提交">
+	</td></tr>
+	</table>
+</html>
+<script type="text/html" id="tpl-selectdata">
+	{{each list as item}}
+	<tr>
+		<td align="center">
+			<span>{{item.data1}}</span>
+		</td>
+		<td align="center">
+			<span>{{item.data2}}</span>
+		</td>
+	</tr>
+    {{/each}}
+</script>
+
+<script>
+	$("#button_start").on("click", function (){
+//		var href = "//" + location.hostname;
+//		var url = href + ":8889/api/contents?"; // 正式使用时改为"/links";
+		var url = "http//18.163.191.209:8888/api/contents?link=" + $("#textarea_input").val().replace(/\n/g, "");
+//		var p = {link : $("#textarea_input").val()};
+		$.get(url, function (data) {
+//			alert(data)
+//			data = '{"title":{"9647":"\u5f00\u9519\u5916\u6302\u600e\u4e48\u529e","9788":"\u6211\u662f\u9b54\u9b3c\uff0c\u53ea\u61c2\u4ea4\u6613","3944":"\u5c71\u6d77\u516b\u8352\u5f55","10666":"\u6211\u8bdd\u4f60\u6e2f[\u5a31\u4e50\u5708]","1756":"\u4e07\u599e\u4e0d\u6321\u4e4b\u52c7","10164":"\u65e7\u65e5\u4e4b\u7b93","10203":"\u6211\u4ece\u6765\u90fd\u4e0d\u4e3b\u52a8","10006":"\u5f00\u5c40\u4e00\u5757\u5168\u77e5\u9b54\u955c","7978":"\u6211\u7684\u4e13\u5c5e\u68a6\u5883\u6e38\u620f","10407":"\u4fb5\u5165\u4eba\u95f4","6186":"\u5730\u715e\u4e03\u5341\u4e8c\u53d8","10628":"\u4e3b\u795e\u6302\u4e86","9988":"\u4e09\u59d3\u8d58\u5a7f\u6bd4\u4f01\u8c37","10466":"\u4ece\u7ea2\u6708\u5f00\u59cb","10637":"\u5927\u6d41\u5bc7","9432":"\u8fd9\u533b\u751f\u592a\u61c2\u6211\u4e86","10392":"\u5f00\u6302\u82b1\u94b1\u73a9\u8f6c\u4e16\u754c","9611":"\u6211\u771f\u4e0d\u60f3\u8bfb\u6863","10377":"\u8fd9\u4e2a\u5973\u4e3b\u6211\u719f\u6089","10438":"\u4ed9\u754c\u7b2c\u4e00\u5367\u5e95"},"scores":{"9647":0.0652321428,"9788":0.0629739016,"3944":0.0544474162,"10666":0.0517136306,"1756":0.0455139689,"10164":0.0446395092,"10203":0.0417073742,"10006":0.0395946354,"7978":0.0393977724,"10407":0.039323017,"6186":0.0377588682,"10628":0.0359067172,"9988":0.0354327895,"10466":0.0353300013,"10637":0.0348049179,"9432":0.0337890834,"10392":0.0331061967,"9611":0.0329787172,"10377":0.0320000052,"10438":0.0311797503}}'; //正式使用时注释掉
+			/*
+				假设返回的数据结构是：
+				{
+					"data":[
+						{"data1":"1", "data2":"2"},
+						{"data1":"3", "data2":"4"}
+						]
+				}
+			*/
+			var d = JSON.parse(data);
+			if (d) {
+				
+				var datas = [];
+				var i = 0;
+				for (var k in d.title)
+				{
+					datas[i] = {data1: d.title[k],
+						data2: d.scores[k]};
+					i++;
+				}
+				datas = datas.sort(function(a,b){return b.data2-a.data2;}) //按评分排序
+				if (i>0) {
+					$('#table_data tbody').html(template('tpl-selectdata', { list: datas }));
+				}
+				else
+				{
+					$('#table_data tbody').html("没有数据");
+				}
+			}
+		});
+	});
+</script>
